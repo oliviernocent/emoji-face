@@ -1,0 +1,47 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color:#4d94ff;/* rgb(254,109,94);*/
+  color: white;
+}
+
+div.container {
+  text-align: justify;
+  width: 640px;
+  margin: auto;
+}
+
+h1, h2 {
+  text-align: center;
+  font-family: "Lobster", cursive;
+  color: rgb(251,218,2);
+  text-shadow: 2px 2px 4px #000000;
+}
+
+h1 {
+  font-size: 5rem;
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+h2 {
+  margin-top: 0;
+  font-size: 4rem;
+}
+
+select {
+  font-size: 1.4rem;
+  width: 256px;
+}
+
+button {
+  border-width: 0;
+  border-radius: 4px;
+  margin-left: 12px;
+  padding: 8px;
+  font-family: "Lobster", cursive;
+  font-size: 1.4rem;
+  background-color: rgb(251,218,2);
+  color: black;
+  box-shadow: 2px 2px 4px #000000;
+}
