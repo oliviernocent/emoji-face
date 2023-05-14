@@ -4,7 +4,7 @@ let selectMode;
 let shuffleButton;
 
 let emoji = [];
-let mask = [];
+let face = [];
 
 let poseNet, poses = [];
 /*
@@ -77,8 +77,8 @@ function setup() {
   selectMode = select("#mode");
   selectMode.changed(changeMode);
 
-  shuffleButton = select("#shuffle");
-  shuffleButton.mousePressed(shuffleMasks);
+  shuffleButton = select("#shuffle-button");
+  shuffleButton.mousePressed(shuffleFaces);
 
   let canvas = createCanvas(640, 480);
   canvas.parent("canvas");
@@ -88,7 +88,7 @@ function setup() {
   capture.hide();
 
   // Create a new poseNet method with a single detection
-  poseNet = ml5.poseNet(capture, "multiple", modelReady);
+  poseNet = ml5.poseNet(capture, "single", modelReady);
 
   // This sets up an event that fills the global variable "poses"
   // with an array every time new poses are detected
@@ -96,8 +96,8 @@ function setup() {
     poses = results;
 
     for (let i=0; i<poses.length; i++) {
-      if (mask[i] === undefined) {
-        mask[i] = Math.floor(Math.random() * emoji.length);
+      if (face[i] === undefined) {
+        face[i] = Math.floor(Math.random() * emoji.length);
       }
     }
   });
@@ -121,7 +121,7 @@ function draw() {
     translate((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
     rotate(angle);
     imageMode(CENTER);
-    image(emoji[mask[i]][mode], 0, 0, l * 5, l * 5);
+    image(emoji[face[i]][mode], 0, 0, l * 5, l * 5);
     pop();
   }
 }
@@ -134,12 +134,11 @@ function changeMode() {
   mode = selectMode.value();
 }
 
-function shuffleMasks() {
-  mask = [];
+function shuffleFaces() {
+  face = [];
   for (let i=0; i<poses.length; i++) {
-    if (mask[i] === undefined) {
-      mask[i] = Math.floor(Math.random() * emoji.length);
+    if (face[i] === undefined) {
+      face[i] = Math.floor(Math.random() * emoji.length);
     }
   }
-
 }
