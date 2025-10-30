@@ -60,6 +60,8 @@ function modelLoaded() {
 function setup() {
   let canvas = createCanvas(windowWidth, windowHeight);
   canvas.parent("canvas");
+
+  colorMode(RGB, 255, 255, 255, 1);
   background(254,109,94);
 
   let constraints = {
@@ -87,7 +89,6 @@ function setup() {
   });
   capture.hide();
 
-  colorMode(RGB, 255, 255, 255, 1);
 }
 
 // Callback function for when bodyPose outputs data
@@ -102,7 +103,7 @@ function gotPoses(results) {
 }
 
 function draw() {  
-  clearInterval();
+  clear();
   scale(zoomFactor);
   imageMode(CORNER);
   image(capture, 0, 0);
