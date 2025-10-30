@@ -3,7 +3,7 @@ let mode = "realism";
 let emoji = [];
 let face = [];
 
-let capture;
+let capture, zoomFactor;
 let bodyPose, poses = [];
 
 function preload() {
@@ -66,12 +66,12 @@ function setup() {
   let constraints = {
     video: {
       facingMode: "user", // "user", "environment",
-      width: windowWidth,
-      aspectRatio: windowWidth / windowHeight
     },
     audio: false,
   };
   capture = createCapture(constraints, { flipped: true }, () => {
+    zoomFactor = windowWidth / capture.width;
+
     // Load the bodyPose model
     let poseOptions = {
       modelType: "MULTIPOSE_LIGHTNING", // "MULTIPOSE_LIGHTNING", "SINGLEPOSE_LIGHTNING", or "SINGLEPOSE_THUNDER".
@@ -103,6 +103,7 @@ function gotPoses(results) {
 
 function draw() {  
   background(77, 148, 255);
+  scale(zoomFactor);
   imageMode(CORNER);
   image(capture, 0, 0);
 
