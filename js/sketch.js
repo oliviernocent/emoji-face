@@ -60,6 +60,7 @@ function modelLoaded() {
 function setup() {
   let canvas = createCanvas(windowWidth, windowHeight);
   canvas.parent("canvas");
+  background(254,109,94);
 
   let constraints = {
     video: {
@@ -100,9 +101,8 @@ function gotPoses(results) {
   }
 }
 
-function draw() {
-  background(254,109,94);
-  
+function draw() {  
+  clearInterval();
   scale(zoomFactor);
   imageMode(CORNER);
   image(capture, 0, 0);
