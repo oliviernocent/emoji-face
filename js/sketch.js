@@ -3,7 +3,7 @@ let mode = "realism";
 let emoji = [];
 let face = [];
 
-let capture;
+let capture, zoomFactor;
 let bodyPose, poses = [];
 
 function preload() {
@@ -51,13 +51,16 @@ function preload() {
 
 // When the model is loaded
 function modelLoaded() {
-  console.log("Model Loaded!");
+  document.querySelector("span").style.display = "none";
 
   // Start detecting poses in the webcam video
   bodyPose.detectStart(capture, gotPoses);
 }
 
 function setup() {
+  let canvas = createCanvas(windowWidth, windowHeight);
+  canvas.parent("canvas");
+
   let constraints = {
     video: {
       facingMode: "user", // "user", "environment"
@@ -65,10 +68,7 @@ function setup() {
     audio: false,
   };
   capture = createCapture(constraints, { flipped: true }, () => {
-    let canvas = createCanvas(capture.width, capture.height);
-    canvas.parent("canvas");
-
-    document.querySelector(".container").style.maxWidth = `${capture.width}px`;
+    zoomFactor = windowWidth / capture.width;
 
     // Load the bodyPose model
     let poseOptions = {
@@ -101,6 +101,7 @@ function gotPoses(results) {
 }
 
 function draw() {
+  scale(zoomFactor);
   imageMode(CORNER);
   image(capture, 0, 0);
 

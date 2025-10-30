@@ -5,11 +5,6 @@ body {
   color: white;
 }
 
-div.container {
-  position: relative;
-  margin: auto;
-}
-
 h1 {
   position: absolute;
   width: 100%;
@@ -17,6 +12,17 @@ h1 {
   text-align: center;
   font-family: "Lobster", cursive;
   font-size: 4rem;
+  color: rgb(251,218,2);
+  text-shadow: 2px 2px 4px #000000;
+}
+
+span {
+  position: absolute;
+  width: 100%;
+  margin-top: 45vh;
+  text-align: center;
+  font-family: "Lobster", cursive;
+  font-size: 1.5rem;
   color: rgb(251,218,2);
   text-shadow: 2px 2px 4px #000000;
 }
