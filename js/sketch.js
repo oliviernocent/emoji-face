@@ -62,7 +62,6 @@ function setup() {
   canvas.parent("canvas");
 
   colorMode(RGB, 255, 255, 255, 1);
-  background(254,109,94);
 
   let constraints = {
     video: {
@@ -103,7 +102,7 @@ function gotPoses(results) {
 }
 
 function draw() {  
-  clear();
+  background(77, 148, 255);
   scale(zoomFactor);
   imageMode(CORNER);
   image(capture, 0, 0);
