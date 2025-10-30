@@ -67,7 +67,7 @@ function setup() {
     video: {
       facingMode: "user", // "user", "environment",
       width: windowWidth,
-      height: windowHeight
+      aspectRatio: windowWidth / windowHeight
     },
     audio: false,
   };
