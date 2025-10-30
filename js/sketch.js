@@ -1,34 +1,10 @@
 let mode = "realism";
-let selectMode;
-
-let shuffleButton;
 
 let emoji = [];
 let face = [];
 
-let poseNet, poses = [];
-/*
-Keypoint label
-
- 0 nose
- 1 leftEye
- 2 rightEye
- 3 leftEar
- 4 rightEar
- 5 leftShoulder
- 6 rightShoulder
- 7 leftElbow
- 8 rightElbow
- 9 leftWrist
-10 rightWrist
-11 leftHip
-12 rightHip
-13 leftKnee
-14 rightKnee
-15 leftAnkle
-16 rightAnkle
-
-*/
+let capture;
+let bodyPose, poses = [];
 
 function preload() {
   let filename = [
@@ -73,45 +49,64 @@ function preload() {
   }
 }
 
+// When the model is loaded
+function modelLoaded() {
+  console.log("Model Loaded!");
+
+  // Start detecting poses in the webcam video
+  bodyPose.detectStart(capture, gotPoses);
+}
+
 function setup() {
-  selectMode = select("#mode");
-  selectMode.changed(changeMode);
+  let constraints = {
+    video: {
+      facingMode: "user", // "user", "environment"
+    },
+    audio: false,
+  };
+  capture = createCapture(constraints, { flipped: true }, () => {
+    let canvas = createCanvas(capture.width, capture.height);
+    canvas.parent("canvas");
 
-  shuffleButton = select("#shuffle-button");
-  shuffleButton.mousePressed(shuffleFaces);
+    document.querySelector(".container").style.maxWidth = `${capture.width}px`;
 
-  let canvas = createCanvas(640, 480);
-  canvas.parent("canvas");
-
-  capture = createCapture(VIDEO);
-  capture.size(640, 480);
-  capture.hide();
-
-  // Create a new poseNet method with a single detection
-  poseNet = ml5.poseNet(capture, "single", modelReady);
-
-  // This sets up an event that fills the global variable "poses"
-  // with an array every time new poses are detected
-  poseNet.on('pose', function (results) {
-    poses = results;
-
-    for (let i=0; i<poses.length; i++) {
-      if (face[i] === undefined) {
-        face[i] = Math.floor(Math.random() * emoji.length);
-      }
-    }
+    // Load the bodyPose model
+    let poseOptions = {
+      modelType: "MULTIPOSE_LIGHTNING", // "MULTIPOSE_LIGHTNING", "SINGLEPOSE_LIGHTNING", or "SINGLEPOSE_THUNDER".
+      enableSmoothing: true,
+      minPoseScore: 0.25,
+      multiPoseMaxDimension: 256,
+      enableTracking: true,
+      trackerType: "boundingBox", // "keypoint" or "boundingBox"
+      trackerConfig: {},
+      modelUrl: undefined,
+      flipped: false,
+    };
+    bodyPose = ml5.bodyPose(poseOptions, modelLoaded);
   });
+  capture.hide();
 
   colorMode(RGB, 255, 255, 255, 1);
 }
 
+// Callback function for when bodyPose outputs data
+function gotPoses(results) {
+  poses = results;
+
+  for (let i = 0; i < poses.length; i++) {
+    if (face[i] === undefined) {
+      face[i] = Math.floor(Math.random() * emoji.length);
+    }
+  }
+}
+
 function draw() {
   imageMode(CORNER);
-  image(capture, 0, 0, 640, 480);
+  image(capture, 0, 0);
 
-  for (let i=0; i<poses.length; i++) {
-    let p1 = poses[i].pose.keypoints[2].position;
-    let p2 = poses[i].pose.keypoints[1].position;
+  for (let i = 0; i < poses.length; i++) {
+    let p1 = poses[i].right_ear;
+    let p2 = poses[i].left_ear;
 
     let v = createVector(p2.x - p1.x, p2.y - p1.y);
     let l = v.mag();
@@ -121,22 +116,14 @@ function draw() {
     translate((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
     rotate(angle);
     imageMode(CENTER);
-    image(emoji[face[i]][mode], 0, 0, l * 5, l * 5);
+    image(emoji[face[i]][mode], 0, -l * 0.1, l * 2.5, l * 2.5);
     pop();
   }
 }
 
-function modelReady() {
-  console.log("Model ready...");
-}
-
-function changeMode() {
-  mode = selectMode.value();
-}
-
 function shuffleFaces() {
   face = [];
-  for (let i=0; i<poses.length; i++) {
+  for (let i = 0; i < poses.length; i++) {
     if (face[i] === undefined) {
       face[i] = Math.floor(Math.random() * emoji.length);
     }
