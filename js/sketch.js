@@ -101,6 +101,8 @@ function gotPoses(results) {
 }
 
 function draw() {
+  background(254,109,94);
+  
   scale(zoomFactor);
   imageMode(CORNER);
   image(capture, 0, 0);
